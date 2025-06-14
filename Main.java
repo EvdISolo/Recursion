@@ -19,12 +19,12 @@ public class Main {
     }
 
     public static int chooseHobbyRecursive(int[] startNumbers, int day, int[] memory) {
-        int[] SaveResult = new int[startNumbers.length + memory.length];
+        int[] saveresult = new int[startNumbers.length + memory.length];
+        System.arraycopy(startNumbers, 0, saveresult, 0, startNumbers.length);
+        System.arraycopy(memory, 0, saveresult, 4, memory.length);
 
-
-
-        int prv = SaveResult[SaveResult.length - 1-day];
-        int prePrePrev =  SaveResult[SaveResult.length - 3 - day];
+        int prv = saveresult[saveresult.length - 1 - day];
+        int prePrePrev = saveresult[saveresult.length - 1 - day - 2];
         int result = (prv * prePrePrev) % 10 + 1;
 
         if (day == 1) {
@@ -35,6 +35,7 @@ public class Main {
 
         return chooseHobbyRecursive(startNumbers, day - 1, memory);
     }
+
 
     public static int chooseHobbyIterative(int[] startNumbers, int day) {
         List<Integer> numbers = new ArrayList<>();
