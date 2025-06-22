@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
+
         compare(1);
         compare(2);
         compare(5);
@@ -11,35 +11,36 @@ public class Main {
     }
 
     public static void compare(int day) {
-        System.out.println("=== Day " + day + " ===");
+        System.out.println("===Day " + day + " ===");
         int[] startNumbers = {21, 1, 20, 23};
+        int[] memory = new int[day + 4];
         int iterative = chooseHobbyIterative(startNumbers, day);
-        int recursive = chooseHobbyRecursive(startNumbers, day, new int[day]);
+        int recursive = chooseHobbyRecursive(startNumbers, day, memory);
         System.out.println("Iterative = " + iterative + " | Recursive = " + recursive);
+        System.out.println();
     }
 
     public static int chooseHobbyRecursive(int[] startNumbers, int day, int[] memory) {
-        int[] saveresult = new int[startNumbers.length + memory.length];
-        System.arraycopy(startNumbers, 0, saveresult, 0, startNumbers.length);
-        System.arraycopy(memory, 0, saveresult, 4, memory.length);
-
-        int prv = saveresult[saveresult.length - 1 - day];
-        int prePrePrev = saveresult[saveresult.length - 1 - day - 2];
-        int result = (prv * prePrePrev) % 10 + 1;
-
-        if (day == 1) {
-            return result;
+        if (day <= 0) {
+            return startNumbers[day + 3];
         }
 
-        memory[memory.length - day] = result;
+        if (memory[day + 3] != 0) {
+            return memory[day + 3];
+        }
 
-        return chooseHobbyRecursive(startNumbers, day - 1, memory);
+        int prev = chooseHobbyRecursive(startNumbers, day - 1, memory);
+        int prePrePrev = chooseHobbyRecursive(startNumbers, day - 3, memory);
+
+        int hobby = (prev * prePrePrev) % 10 + 1;
+
+        memory[day + 3] = hobby;
+
+        return hobby;
     }
-
 
     public static int chooseHobbyIterative(int[] startNumbers, int day) {
         List<Integer> numbers = new ArrayList<>();
-
         numbers.add(startNumbers[0]);
         numbers.add(startNumbers[1]);
         numbers.add(startNumbers[2]);
@@ -51,6 +52,7 @@ public class Main {
             int prePrePrev = numbers.get(index - 3); // пре-пре-предыдущее значение
             numbers.add((prev * prePrePrev) % 10 + 1);
         }
+
         return numbers.get(numbers.size() - 1);
     }
 }
